@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人简历 | [梁源源]</title>
+    
+    <!-- 引入资源库 -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Orbitron:wght@500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 核心配色 --- */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #eef2f3 100%);
+            --gold-primary: #D4AF37;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: rgba(212, 175, 55, 0.3);
+            --neon-glow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        /* --- 开场动画 --- */
+        #loader-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 0.8s ease-in-out; 
+        }
+        .loader-logo {
+            font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold-primary);
+            margin-bottom: 20px; animation: pulse 1.5s infinite;
+        }
+        .progress-bar-bg { width: 250px; height: 3px; background: #eee; margin: 0 auto; border-radius: 2px; }
+        .progress-bar {
+            width: 0%; height: 100%; background: var(--gold-primary);
+            box-shadow: 0 0 10px var(--gold-primary);
+            animation: loadProgress 2.5s ease-out forwards;
+        }
+        @keyframes loadProgress { 0% { width: 0; } 90% { width: 90%; } 100% { width: 100%; } }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+        /* --- 导航栏 --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.95); 
+            border-bottom: 1px solid var(--border-color); z-index: 1000;
+        }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--gold-primary); font-weight: bold; }
+        
+        .nav-right { display: flex; align-items: center; gap: 25px; }
+        .nav-menu { display: flex; gap: 15px; }
+        .nav-menu a {
+            text-decoration: none; color: var(--text-main); font-size: 0.8rem; font-weight: bold;
+            text-transform: uppercase; transition: 0.3s; font-family: 'Orbitron', sans-serif;
+        }
+        .nav-menu a:hover { color: var(--gold-primary); }
+        .lang-btn {
+            padding: 5px 15px; border: 1px solid var(--gold-primary); background: transparent;
+            color: var(--gold-primary); cursor: pointer; font-family: 'Orbitron', sans-serif;
+            transition: 0.3s; border-radius: 20px;
+        }
+        .lang-btn:hover { background: var(--gold-primary); color: #fff; }
+
+        /* --- 通用样式 --- */
+        section { padding: 80px 10%; }
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center;
+            color: var(--gold-primary); margin-bottom: 50px;
+            border-bottom: 2px solid var(--border-color); display: inline-block; padding-bottom: 10px;
+            position: relative; left: 50%; transform: translateX(-50%);
+        }
+        .card {
+            background: #fff; border: 1px solid var(--border-color); padding: 35px;
+            transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; margin-bottom: 20px;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--neon-glow); border-color: var(--gold-primary); }
+
+        /* --- Hero --- */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; padding-top: 100px; }
+        .hero h1 { font-size: 3.5rem; color: var(--gold-primary); margin-bottom: 15px; font-family: 'Playfair Display', serif; }
+        .hero p { font-size: 1.2rem; color: var(--text-light); margin-bottom: 30px; letter-spacing: 1px; }
+        .hero-video-container {
+            margin: 0 auto 40px; max-width: 700px; width: 100%;
+            border: 2px solid var(--gold-primary); padding: 5px;
+            box-shadow: var(--neon-glow); background: #fff;
+        }
+        .hero-video-container video { width: 100%; display: block; }
+        .btn-neon {
+            padding: 12px 35px; border: 2px solid var(--gold-primary); color: var(--gold-primary);
+            text-decoration: none; font-weight: bold; transition: 0.3s; display: inline-block;
+        }
+        .btn-neon:hover { background: var(--gold-primary); color: #fff; box-shadow: var(--neon-glow); }
+
+        /* --- 教育经历 --- */
+        .edu-grid { display: grid; gap: 20px; }
+        .edu-item { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+        .edu-info h3 { font-size: 1.3rem; margin-bottom: 5px; }
+        .edu-info span { color: var(--gold-primary); font-weight: bold; display: block; margin-bottom: 10px; }
+        .edu-desc { color: #666; font-size: 0.9rem; margin-top: 10px; line-height: 1.6; }
+        .edu-date { font-family: 'Orbitron', sans-serif; color: #999; font-size: 0.9rem; }
+        .edu-gallery { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
+        .edu-img {
+            width: 120px; height: 80px; object-fit: cover; border-radius: 4px; 
+            border: 1px solid #ddd; cursor: zoom-in; transition: 0.3s; background: #eee;
+        }
+        .edu-img:hover { transform: scale(1.05); border-color: var(--gold-primary); }
+
+        /* --- 核心项目 --- */
+        .hero-project-card {
+            background: #fff; border: 1px solid var(--border-color);
+            padding: 40px; display: flex; flex-direction: column; align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05); transition: 0.4s;
+        }
+        .hero-project-card:hover { transform: translateY(-5px); box-shadow: var(--neon-glow); border-color: var(--gold-primary); }
+        .project-img-box {
+            width: 100%; height: 350px; background: #f4f4f4; margin-bottom: 30px; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; border: 1px solid #eee;
+        }
+        .project-img-box img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+        .tech-tags { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .tech-tags span {
+            border: 1px solid var(--gold-primary); color: var(--gold-primary);
+            padding: 5px 12px; font-size: 0.8rem; border-radius: 20px;
+        }
+
+        /* --- 实习经历 --- */
+        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
+        .timeline::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+            background: rgba(212, 175, 55, 0.3);
+        }
+        .timeline-item { position: relative; padding-left: 40px; margin-bottom: 50px; }
+        .timeline-item::after {
+            content: ''; position: absolute; left: -6px; top: 5px; width: 14px; height: 14px;
+            background: #fff; border: 3px solid var(--gold-primary); border-radius: 50%;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        .exp-role { font-size: 1.2rem; font-weight: bold; color: var(--text-main); }
+        .exp-company { color: var(--gold-primary); font-family: 'Orbitron', sans-serif; font-weight: bold; }
+        .exp-date { font-size: 0.9rem; color: #999; margin-bottom: 10px; display: block; }
+        .exp-list li { margin-bottom: 8px; color: #555; font-size: 0.95rem; }
+
+        /* --- 荣誉 (2x2 布局) --- */
+        .honor-grid { 
+            display: grid; 
+            /* 强制 2 列 */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 30px; 
+        }
+        .honor-card {
+            background: #fff; border: 1px solid var(--border-color); overflow: hidden;
+            transition: 0.4s; cursor: pointer; position: relative;
+        }
+        .honor-card:hover { transform: translateY(-8px); box-shadow: var(--neon-glow); border-color: var(--gold-primary); }
+        .honor-img {
+            width: 100%; height: 200px; background: #eee;
+            display: flex; justify-content: center; align-items: center; color: #aaa; overflow: hidden;
+        }
+        .honor-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; cursor: zoom-in; }
+        .honor-card:hover .honor-img img { transform: scale(1.1); }
+        .honor-content { padding: 20px; }
+        .honor-cat { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--gold-primary); margin-bottom: 5px; display: block; }
+        .honor-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: var(--text-main); }
+        .honor-desc { font-size: 0.9rem; color: #777; line-height: 1.5; }
+
+        /* --- 兼职经历 --- */
+        .part-time-grid { display: grid; gap: 30px; }
+        .pt-img-row {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+            gap: 15px; margin-top: 15px;
+        }
+        .pt-img {
+            height: 120px; width: 100%; object-fit: cover; border-radius: 4px;
+            cursor: zoom-in; border: 1px solid #ddd; transition: 0.3s;
+        }
+        .pt-img:hover { transform: scale(1.05); border-color: var(--gold-primary); }
+
+        /* --- 兴趣爱好 --- */
+        .masonry-wrapper { column-count: 3; column-gap: 20px; padding: 10px; }
+        .masonry-item {
+            break-inside: avoid; margin-bottom: 20px; position: relative;
+            border-radius: 8px; overflow: hidden; background: #fff;
+            border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.4s ease; cursor: zoom-in;
+        }
+        .masonry-item img {
+            width: 100%; height: auto; display: block;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .masonry-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 18, 18, 0.4); opacity: 0; transition: 0.4s;
+            display: flex; justify-content: center; align-items: center;
+            pointer-events: none !important;
+        }
+        .masonry-overlay i { color: var(--gold-primary); font-size: 2rem; transform: scale(0); transition: 0.4s; }
+        .masonry-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2); border-color: var(--gold-primary); }
+        .masonry-item:hover img { transform: scale(1.08); }
+        .masonry-item:hover .masonry-overlay { opacity: 1; }
+        .masonry-item:hover .masonry-overlay i { transform: scale(1); }
+
+        /* --- Contact --- */
+        .contact-section { text-align: center; border-top: 1px solid #ddd; padding-top: 80px; }
+        .email-display {
+            font-size: 2rem; color: var(--gold-primary); font-family: 'Orbitron', sans-serif;
+            margin-bottom: 30px; font-weight: bold; letter-spacing: 1px; word-break: break-all;
+        }
+        .email-display a { color: var(--gold-primary); text-decoration: none; transition: 0.3s; }
+        .email-display a:hover { text-shadow: var(--neon-glow); color: #aa8420; }
+
+        /* --- Lightbox Modal --- */
+        .modal {
+            display: none; position: fixed; z-index: 99999; 
+            padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; 
+            overflow: auto; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            margin: auto; display: block; max-width: 90%; max-height: 90vh;
+            border: 2px solid var(--gold-primary); box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            animation: zoom 0.6s;
+        }
+        @keyframes zoom { from {transform:scale(0)} to {transform:scale(1)} }
+        .close-btn {
+            position: absolute; top: 15px; right: 35px; color: #f1f1f1; 
+            font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer;
+        }
+        .close-btn:hover { color: var(--gold-primary); }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            section { padding: 80px 5%; }
+            .edu-item { flex-direction: column; }
+            .honor-grid { grid-template-columns: 1fr; } /* 手机端恢复单列 */
+            .masonry-wrapper { column-count: 2; }
+            .nav-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 开场动画 -->
+    <div id="loader-screen">
+        <div class="loader-logo">WELCOME</div>
+        <div class="progress-bar-bg"><div class="progress-bar"></div></div>
+        <p style="margin-top:10px; color:#aaa; font-size:0.8rem;">Loading...</p>
+    </div>
+
+    <!-- 2. 导航 -->
+    <nav>
+        <div class="logo">PORTFOLIO.</div>
+        <div class="nav-right">
+            <div class="nav-menu">
+                <a href="#education" data-i18n="nav_edu">教育</a>
+                <a href="#experience" data-i18n="nav_exp">经历</a>
+                <a href="#honors" data-i18n="nav_honor">荣誉</a>
+                <a href="#part-time" data-i18n="nav_pt">兼职</a>
+                <a href="#interests" data-i18n="nav_int">兴趣</a>
+                <a href="#contact" data-i18n="nav_contact">联系</a>
+            </div>
+            <button class="lang-btn" onclick="toggleLanguage()">EN / 中</button>
+        </div>
+    </nav>
+
+    <!-- 3. Hero -->
+    <section class="hero">
+        <div data-aos="zoom-in">
+            <h1 data-i18n="hero_name">[梁源源]</h1>
+            <p data-i18n="hero_title" style="color:var(--gold-primary); font-weight:bold;">计算机（可持续数据科学）理学硕士 | NUS</p>
+            <p data-i18n="hero_desc">热衷于数据思维、金融科技与可持续系统分析</p>
+            <div class="hero-video-container">
+                <video controls poster="video_poster.jpg">
+                    <source src="intro.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+            <a href="#contact" class="btn-neon" data-i18n="btn_contact">联系我</a>
+        </div>
+    </section>
+
+    <!-- 4. 教育背景 -->
+    <section id="education">
+        <h2 class="section-title" data-i18n="title_edu" data-aos="fade-up">教育背景</h2>
+        <div class="edu-grid">
+            <!-- NUS -->
+            <div class="card edu-item" data-aos="fade-up">
+                <div class="edu-info">
+                    <h3 data-i18n="edu_1_school">新加坡国立大学（NUS）| QS 8</h3>
+                    <span data-i18n="edu_1_degree">理学硕士，计算机（可持续数据科学）</span>
+                    <p class="edu-desc" data-i18n="edu_1_desc">核心课程：高级回归和时间序列分析、数据可视化、可持续系统分析等。</p>
+                </div>
+                <div class="edu-date">2024.08 – 2025.06</div>
+            </div>
+            <!-- USYD -->
+            <div class="card edu-item" data-aos="fade-up">
+                <div class="edu-info">
+                    <h3 data-i18n="edu_2_school">悉尼大学（USYD）|QS 25</h3>
+                    <span data-i18n="edu_2_degree">商学学士，会计与金融 </span>
+                    <p class="edu-desc" data-i18n="edu_2_desc">
+                        奖学金：Vice-Chancellor’s International Scholarship & Global Mobility Scholarship<br>
+                        荣誉：入选 Dalyell Scholars Program (ATAR 98+ 优秀学者计划)
+                    </p>
+                </div>
+                <div class="edu-date">2021.08 – 2024.01</div>
+            </div>
+            <!-- PKU -->
+            <div class="card edu-item" data-aos="fade-up">
+                <div class="edu-info" style="width:100%">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div>
+                            <h3 data-i18n="edu_3_school">北京大学光华管理学院</h3>
+                            <span data-i18n="edu_3_prog">华人留学生知中国暑期项目</span>
+                        </div>
+                        <div class="edu-date">2022.06 – 2022.07</div>
+                    </div>
+                    <p class="edu-desc" data-i18n="edu_3_desc">探索包括大数据思维、互联网企业发展、金融科技、区块链创新和人工智能等前沿趋势在企业中的应用。</p>
+                    <div class="edu-gallery">
+                        <img src="pku1.jpg" class="edu-img" alt="PKU 1" onerror="this.src='https://via.placeholder.com/120x80?text=PKU+1'">
+                        <img src="pku2.jpg" class="edu-img" alt="PKU 2" onerror="this.src='https://via.placeholder.com/120x80?text=PKU+2'">
+                    </div>
+                </div>
+            </div>
+            <!-- SJTU -->
+            <div class="card edu-item" data-aos="fade-up">
+                <div class="edu-info" style="width:100%">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div>
+                            <h3 data-i18n="edu_4_school">上海交通大学</h3>
+                            <span data-i18n="edu_4_prog">国际暑期学校项目</span>
+                        </div>
+                        <div class="edu-date">2022.12 – 2023.01</div>
+                    </div>
+                    <p class="edu-desc" data-i18n="edu_4_desc">修读了财务报表分析与投资组合管理两门核心金融课程，系统强化了企业价值判断能力与专业资产配置能力。</p>
+                    <div class="edu-gallery">
+                        <img src="sjtu.jpg" class="edu-img" alt="SJTU" onerror="this.src='https://via.placeholder.com/120x80?text=SJTU+1'">
+                                            </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 核心项目 -->
+    <section id="project">
+        <h2 class="section-title" data-i18n="title_proj" data-aos="fade-up">项目经历</h2>
+        <div class="hero-project-card" data-aos="fade-up">
+            <div class="project-img-box">
+                <img src="project.jpg" alt="CarbonEasy Dashboard" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\'text-align:center\'><i class=\'fas fa-chart-pie\' style=\'font-size:3rem; color:#ccc\'></i><p style=\'margin-top:10px;color:#999\'>Project Image</p></div>'">
+            </div>
+            <h3 data-i18n="proj_name" style="font-size:1.8rem; margin-bottom:5px;">CarbonEasy - 碳排放计算器</h3>
+            <span class="exp-date">2024.09 - 2024.11</span>
+            <p data-i18n="proj_desc" style="text-align:left; max-width:800px; color:#555; margin:20px 0; line-height:1.8;">
+                参与开发专注于办公楼碳排放计算的 Web 应用。整合公开数据库清洗数据，构建随机森林预测模型（R² = 0.956），并设计 Power BI 交互式仪表盘。最终将评估时间缩短约 40%，为企业节能改造提供了精准数据支撑。
+            </p>
+            <div class="tech-tags">
+                <span>Random Forest</span><span>Power BI</span><span>Data Cleaning</span><span>Python</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 实习经历 -->
+    <section id="experience">
+        <h2 class="section-title" data-i18n="title_exp" data-aos="fade-up">实习经历</h2>
+        <div class="timeline">
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="card">
+                    <div class="exp-role" data-i18n="exp_1_role">数据分析实习生</div>
+                    <div class="exp-company" data-i18n="exp_1_comp">中国远洋运输有限公司 (COSCO) | 新加坡</div>
+                    <span class="exp-date">2024.09 – 2024.11</span>
+                    <ul class="exp-list">
+                        <li data-i18n="exp_1_li1">构建时间序列与多元回归模型预测港口吞吐量，辅助提升仓位利用率 12%。</li>
+                        <li data-i18n="exp_1_li2">运用 t-SNE 算法对客户数据降维聚类，识别市场区块并优化定价策略。</li>
+                        <li data-i18n="exp_1_li3">使用 Power BI 与 Python 输出分析报告，推动策略在 3 条航线落地。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="card">
+                    <div class="exp-role" data-i18n="exp_2_role">分析师助理 (电新组)</div>
+                    <div class="exp-company" data-i18n="exp_2_comp">兴业证券研究所</div>
+                    <span class="exp-date">2024.03 – 2024.08</span>
+                    <ul class="exp-list">
+                        <li data-i18n="exp_2_li1">独立完成 1 篇深度报告及 31 篇财报点评，构建 DCF/DDM 估值模型。</li>
+                        <li data-i18n="exp_2_li2">利用 SQL 分析业财数据（ROE、毛利率等），识别公司盈利结构差异。</li>
+                        <li data-i18n="exp_2_li3">参与 40+ 场高管调研会议，覆盖新能源、机器人及核电行业。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="card">
+                    <div class="exp-role" data-i18n="exp_3_role">会计实习生</div>
+                    <div class="exp-company" data-i18n="exp_3_comp">WZ & CO Pty Ltd 会计师事务所</div>
+                    <span class="exp-date">2023.09 – 2023.12</span>
+                    <ul class="exp-list">
+                        <li data-i18n="exp_3_li1">开发 Excel 自动化工具优化税务申报流程，减少 30% 人工操作。</li>
+                        <li data-i18n="exp_3_li2">处理 50+ 项固定资产折旧计算，月末对账准确率达 95% 以上。</li>
+                        <li data-i18n="exp_3_li3">分析客户现金流与费用率，识别节税与成本优化机会。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-right">
+                <div class="card">
+                    <div class="exp-role" data-i18n="exp_4_role">审计助理</div>
+                    <div class="exp-company" data-i18n="exp_4_comp">山东启新有限责任会计师事务所</div>
+                    <span class="exp-date">2021.12 – 2022.01</span>
+                    <ul class="exp-list">
+                        <li data-i18n="exp_4_li1">参与两家企业年审，独立抽查 100+ 笔大额交易，发现 10+ 项账目异常。</li>
+                        <li data-i18n="exp_4_li2">协助完成固定资产实地盘点，确保账实一致性，支撑审计报告交付。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 综合荣誉 (2x2 Layout) -->
+    <section id="honors">
+        <h2 class="section-title" data-i18n="title_honor" data-aos="fade-up">综合经历与荣誉</h2>
+        <div class="honor-grid">
+            <!-- 奖学金 -->
+            <div class="honor-card" data-aos="fade-up">
+                <div class="honor-img"><img src="honor1.jpg" alt="Scholarship" onerror="this.src='https://via.placeholder.com/400x200/f0f0f0/ccc?text=Scholarship'"></div>
+                <div class="honor-content">
+                    <span class="honor-cat">SCHOLARSHIP</span>
+                    <div class="honor-title" data-i18n="honor_1_title">校长国际奖学金</div>
+                    <div class="honor-desc" data-i18n="honor_1_desc">获得 USYD Vice-Chancellor’s International Scholarship & Global Mobility Scholarship.</div>
+                </div>
+            </div>
+            <!-- 学者计划 -->
+            <div class="honor-card" data-aos="fade-up">
+                <div class="honor-img"><img src="honor2.jpg" alt="Dalyell" onerror="this.src='https://via.placeholder.com/400x200/f0f0f0/ccc?text=Dalyell+Scholars'"></div>
+                <div class="honor-content">
+                    <span class="honor-cat">ACADEMIC PROGRAM</span>
+                    <div class="honor-title" data-i18n="honor_2_title">Dalyell Scholars 优秀学者计划</div>
+                    <div class="honor-desc" data-i18n="honor_2_desc">入选悉尼大学 ATAR 达到 98 分以上的优秀学者计划，参与高阶研究课程。</div>
+                </div>
+            </div>
+            <!-- MOS 证书 -->
+            <div class="honor-card" data-aos="fade-up">
+                <div class="honor-img"><img src="honor3.jpg" alt="MOS" onerror="this.src='https://via.placeholder.com/400x200/f0f0f0/ccc?text=MOS+Certificate'"></div>
+                <div class="honor-content">
+                    <span class="honor-cat">CERTIFICATE</span>
+                    <div class="honor-title" data-i18n="honor_3_title">Microsoft Office Specialist</div>
+                    <div class="honor-desc" data-i18n="honor_3_desc">获得微软办公软件专家级认证 (2016 Expert Level)。熟练运用 Excel 高级功能。</div>
+                </div>
+            </div>
+            <!-- 雅思 -->
+            <div class="honor-card" data-aos="fade-up">
+                <div class="honor-img"><img src="honor4.jpg" alt="IELTS" onerror="this.src='https://via.placeholder.com/400x200/f0f0f0/ccc?text=IELTS+7.5'"></div>
+                <div class="honor-content">
+                    <span class="honor-cat">LANGUAGE</span>
+                    <div class="honor-title" data-i18n="honor_4_title">雅思 IELTS 7.5</div>
+                    <div class="honor-desc" data-i18n="honor_4_desc">具备流利的英语听说读写能力，能够进行跨国业务沟通与学术写作。</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 兼职经历 (新增) -->
+    <section id="part-time">
+        <h2 class="section-title" data-i18n="title_pt" data-aos="fade-up">兼职经历</h2>
+        <div class="part-time-grid">
+            <!-- 外卖 -->
+            <div class="card" data-aos="fade-up">
+                <div style="display:flex; flex-direction:column;">
+                    <h3 style="margin-bottom:10px;" data-i18n="pt_1_title">外卖配送经历</h3>
+                    <p style="color:#666; margin-bottom:15px;" data-i18n="pt_1_desc">通过社会实践深入了解零工经济运作模式，锻炼了时间管理与抗压能力。</p>
+                    <div class="pt-img-row" style="grid-template-columns: 200px;">
+                        <img src="delivery.jpg" class="pt-img" alt="Delivery" onerror="this.src='https://via.placeholder.com/200x200?text=Delivery'">
+                    </div>
+                </div>
+            </div>
+            <!-- 模特 (相册) -->
+            <div class="card" data-aos="fade-up">
+                <h3 style="margin-bottom:10px;" data-i18n="pt_2_title">模特经历</h3>
+                <p style="color:#666; margin-bottom:15px;" data-i18n="pt_2_desc">参与多次商业拍摄与时尚活动，展现自信与表现力。</p>
+                <div class="pt-img-row">
+                    <img src="model1.jpg" class="pt-img" alt="Model 1" onerror="this.src='https://via.placeholder.com/150x150?text=Model+1'">
+                    <img src="model2.jpg" class="pt-img" alt="Model 2" onerror="this.src='https://via.placeholder.com/150x150?text=Model+2'">
+                    <img src="model3.jpg" class="pt-img" alt="Model 3" onerror="this.src='https://via.placeholder.com/150x150?text=Model+3'">
+                    <img src="model4.jpg" class="pt-img" alt="Model 4" onerror="this.src='https://via.placeholder.com/150x150?text=Model+4'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. 兴趣爱好 (新增 8张瀑布流) -->
+    <section id="interests">
+        <h2 class="section-title" data-i18n="title_int" data-aos="fade-up">兴趣爱好</h2>
+        <p style="text-align:center; margin-bottom:40px; color:#777;" data-i18n="int_desc">瑜伽、马术、潜水与手工制作，热爱生活的多样性</p>
+        
+        <div class="masonry-wrapper">
+            <!-- 瑜伽 (1) -->
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_yoga.jpg" alt="Yoga" onerror="this.src='https://via.placeholder.com/400x500?text=Yoga'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <!-- 马术 (1) -->
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_horse.jpg" alt="Horse" onerror="this.src='https://via.placeholder.com/400x300?text=Equestrian'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <!-- 骑行 (1) -->
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_bike.jpg" alt="Bike" onerror="this.src='https://via.placeholder.com/400x300?text=Biking'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+
+            <!-- 潜水 (2) -->
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_dive1.jpg" alt="Dive 1" onerror="this.src='https://via.placeholder.com/400x600?text=Diving+1'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_dive2.jpg" alt="Dive 2" onerror="this.src='https://via.placeholder.com/400x300?text=Diving+2'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <!-- 手工 (4) -->
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_craft1.jpg" alt="Craft 1" onerror="this.src='https://via.placeholder.com/400x400?text=Craft+1'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_craft2.jpg" alt="Craft 2" onerror="this.src='https://via.placeholder.com/400x300?text=Craft+2'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_craft3.jpg" alt="Craft 3" onerror="this.src='https://via.placeholder.com/400x500?text=Craft+3'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+            <div class="masonry-item" data-aos="fade-up">
+                <img src="hobby_craft4.jpg" alt="Craft 4" onerror="this.src='https://via.placeholder.com/400x400?text=Craft+4'">
+                <div class="masonry-overlay"><i class="fas fa-search-plus"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. 联系方式 -->
+    <section id="contact" class="contact-section">
+        <h2 data-i18n="contact_title" data-aos="fade-up">保持联系</h2>
+        <p style="margin-bottom:30px;" data-i18n="contact_sub">欢迎邮件沟通交流</p>
+        
+        <div class="email-display" data-aos="zoom-in">
+            <i class="far fa-envelope" style="margin-right:10px;"></i>
+            <a href="mailto:lyy2277@sina.com">lyy2277@sina.com</a>
+        </div>
+
+        <div style="margin-top:50px; font-size:0.8rem; color:#ccc;">&copy; 2025 [梁源源].</div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="image-modal" class="modal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // 1. 强制开场
+        function enterSite() {
+            const loader = document.getElementById('loader-screen');
+            if (!loader || loader.style.transform === 'translateY(-100%)') return;
+            loader.style.transform = 'translateY(-100%)';
+            document.body.style.overflowY = 'auto'; 
+            try { if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); } catch (e) {}
+        }
+        window.addEventListener('load', enterSite);
+        setTimeout(enterSite, 2500);
+
+        // 2. Lightbox
+        function setupLightbox() {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("modal-img");
+            // 选取所有需要放大的图片
+            const images = document.querySelectorAll('.masonry-item img, .edu-img, .project-img-box img, .honor-img img, .pt-img');
+            images.forEach(img => {
+                img.style.cursor = 'zoom-in';
+                img.onclick = function(e){
+                    e.stopPropagation(); 
+                    modal.style.display = "flex";
+                    modal.style.justifyContent = "center";
+                    modal.style.alignItems = "center";
+                    modalImg.src = this.src;
+                }
+            });
+        }
+        function closeModal() { document.getElementById("image-modal").style.display = "none"; }
+        window.addEventListener('load', setupLightbox);
+
+        // 3. 翻译
+        const translations = {
+            'ch': {
+                'nav_edu': '教育', 'nav_proj': '项目', 'nav_exp': '经历', 'nav_honor': '荣誉', 'nav_pt': '兼职', 'nav_int': '爱好', 'nav_contact': '联系',
+                'hero_name': '[梁源源]',
+                'hero_title': '计算机（可持续数据科学）理学硕士 | NUS',
+                'hero_desc': '热衷于大数据思维、金融科技与可持续系统分析',
+                'btn_contact': '联系我',
+                'title_edu': '教育背景',
+                'edu_1_school': '新加坡国立大学（NUS）| QS 8',
+                'edu_1_degree': '理学硕士，计算机（可持续数据科学）',
+                'edu_1_desc': '核心课程：高级回归和时间序列分析、数据可视化、可持续系统分析等。',
+                'edu_2_school': '悉尼大学（USYD）|QS 25',
+                'edu_2_degree': '商学学士，会计与金融',
+                'edu_2_desc': '奖学金：Vice-Chancellor’s International Scholarship & Global Mobility Scholarship<br>荣誉：入选 Dalyell Scholars Program (ATAR 98+ 优秀学者计划)',
+                'edu_3_school': '北京大学光华管理学院',
+                'edu_3_prog': '华人留学生知中国暑期项目',
+                'edu_3_desc': '探索包括大数据思维、互联网企业发展、金融科技、区块链创新和人工智能等前沿趋势在企业中的应用。',
+                'edu_4_school': '上海交通大学',
+                'edu_4_prog': '国际暑期学校项目',
+                'edu_4_desc': '修读了财务报表分析与投资组合管理两门核心金融课程，系统强化了企业价值判断能力与专业资产配置能力。',
+                'title_proj': '项目经历',
+                'proj_name': 'CarbonEasy - 碳排放计算器',
+                'proj_desc': '参与开发专注于办公楼碳排放计算的 Web 应用。整合公开数据库清洗数据，构建随机森林预测模型（R² = 0.956），并设计 Power BI 交互式仪表盘。最终将评估时间缩短约 40%，为企业节能改造提供了精准数据支撑。',
+                'title_exp': '实习经历',
+                'exp_1_role': '数据分析实习生',
+                'exp_1_comp': '中国远洋运输有限公司 (COSCO) | 新加坡',
+                'exp_1_li1': '构建时间序列与多元回归模型预测港口吞吐量，辅助提升仓位利用率 12%。',
+                'exp_1_li2': '运用 t-SNE 算法对客户数据降维聚类，识别市场区块并优化定价策略。',
+                'exp_1_li3': '使用 Power BI 与 Python 输出分析报告，推动策略在 3 条航线落地。',
+                'exp_2_role': '分析师助理 (电新组)',
+                'exp_2_comp': '兴业证券研究所',
+                'exp_2_li1': '独立完成 1 篇深度报告及 31 篇财报点评，构建 DCF/DDM 估值模型。',
+                'exp_2_li2': '利用 SQL 分析业财数据（ROE、毛利率等），识别公司盈利结构差异。',
+                'exp_2_li3': '参与 40+ 场高管调研会议，覆盖新能源、机器人及核电行业。',
+                'exp_3_role': '会计实习生',
+                'exp_3_comp': 'WZ & CO Pty Ltd 会计师事务所',
+                'exp_3_li1': '开发 Excel 自动化工具优化税务申报流程，减少 30% 人工操作。',
+                'exp_3_li2': '处理 50+ 项固定资产折旧计算，月末对账准确率达 95% 以上。',
+                'exp_3_li3': '分析客户现金流与费用率，识别节税与成本优化机会。',
+                'exp_4_role': '审计助理',
+                'exp_4_comp': '山东启新有限责任会计师事务所',
+                'exp_4_li1': '参与两家企业年审，独立抽查 100+ 笔大额交易，发现 10+ 项账目异常。',
+                'exp_4_li2': '协助完成固定资产实地盘点，确保账实一致性，支撑审计报告交付。',
+                'title_honor': '综合经历与荣誉',
+                'honor_1_title': '校长国际奖学金',
+                'honor_1_desc': '获得 USYD Vice-Chancellor’s International Scholarship & Global Mobility Scholarship.',
+                'honor_2_title': 'Dalyell Scholars 优秀学者计划',
+                'honor_2_desc': '入选悉尼大学 ATAR 达到 98 分以上的优秀学生计划，参与高阶研究课程。',
+                'honor_3_title': 'Microsoft Office Specialist',
+                'honor_3_desc': '获得微软办公软件专家级认证 (2016 Expert Level)。熟练运用 Excel 高级功能。',
+                'honor_4_title': '雅思 IELTS 7.5',
+                'honor_4_desc': '具备流利的英语听说读写能力，能够进行跨国业务沟通与学术写作。',
+                'title_pt': '兼职经历',
+                'pt_1_title': '外卖配送经历',
+                'pt_1_desc': '通过社会实践深入了解零工经济运作模式，锻炼了时间管理与抗压能力。',
+                'pt_2_title': '模特经历',
+                'pt_2_desc': '参与多次商业拍摄与时尚活动，展现自信与表现力。',
+                'title_int': '兴趣爱好',
+                'int_desc': '瑜伽、马术、潜水与手工制作，热爱生活的多样性',
+                'contact_title': '保持联系',
+                'contact_sub': '欢迎邮件沟通交流'
+            },
+            'en': {
+                'nav_edu': 'Education', 'nav_proj': 'Projects', 'nav_exp': 'Experience', 'nav_honor': 'Honors', 'nav_pt': 'Jobs', 'nav_int': 'Hobbies', 'nav_contact': 'Contact',
+                'hero_name': '[Yuanyuan Liang (Sylvia)]',
+                'hero_title': 'M.S. in Computing (Data Science for Sustainability) | NUS',
+                'hero_desc': 'Passionate about Data Science, FinTech and Sustainable Systems Analysis',
+                'btn_contact': 'Contact Me',
+                'title_edu': 'Education',
+                'edu_1_school': 'National University of Singapore (NUS)| QS 8',
+                'edu_1_degree': 'M.S. in Computing (Data Science for Sustainability) ',
+                'edu_1_desc': 'Core Courses: Advanced Regression & Time Series, Data Viz, Sustainable Systems.',
+                'edu_2_school': 'University of Sydney (USYD)| QS 25',
+                'edu_2_degree': 'Bachelor of Commerce (Accounting & Finance) ',
+                'edu_2_desc': 'Scholarships: Vice-Chancellor’s International & Global Mobility Scholarship<br>Honors: Dalyell Scholars Program (ATAR 98+)',
+                'edu_3_school': 'Peking University (Guanghua)',
+                'edu_3_prog': 'Summer Program',
+                'edu_3_desc': 'Topics: Chinese Financial Market, Big Data Thinking, AI Applications, FinTech.',
+                'edu_4_school': 'Shanghai Jiao Tong University',
+                'edu_4_prog': 'International Summer School',
+                'edu_4_desc': 'Explore the application of cutting-edge trends such as big data thinking, internet enterprise development, fintech, blockchain innovation and artificial intelligence in enterprises. ',
+                'title_proj': 'Project Experience',
+                'proj_name': 'CarbonEasy - Carbon Calculator',
+                'proj_desc': 'Developed a web app for office building carbon footprint calculation. Cleaned data from public databases, built a Random Forest model (R² = 0.956), and designed Power BI dashboards. Reduced assessment time by 40% and supported energy-saving strategies.',
+                'title_exp': 'Work Experience',
+                'exp_1_role': 'Data Analyst Intern',
+                'exp_1_comp': 'COSCO Shipping | Singapore',
+                'exp_1_li1': 'Built Time Series/Regression models to predict port throughput, increasing utilization by 12%.',
+                'exp_1_li2': 'Applied t-SNE for customer clustering to identify market segments and optimize pricing.',
+                'exp_1_li3': 'Produced reports via Power BI/Python, implementing strategies across 3 routes.',
+                'exp_2_role': 'Analyst Assistant (New Energy)',
+                'exp_2_comp': 'Industrial Securities Research',
+                'exp_2_li1': 'Authored 1 in-depth report and 31 financial comments; built DCF/DDM valuation models.',
+                'exp_2_li2': 'Analyzed financial data (ROE, Gross Margin) via SQL to identify profitability drivers.',
+                'exp_2_li3': 'Participated in 40+ executive meetings covering New Energy, Robotics, and Nuclear Power.',
+                'exp_3_role': 'Accounting Intern',
+                'exp_3_comp': 'WZ & CO Pty Ltd',
+                'exp_3_li1': 'Developed Excel automation tools for tax filing, reducing manual work by 30%.',
+                'exp_3_li2': 'Managed depreciation for 50+ assets; achieved 95%+ accuracy in monthly reconciliation.',
+                'exp_3_li3': 'Analyzed cash flow and expense ratios to identify tax-saving and cost-optimization opportunities.',
+                'exp_4_role': 'Audit Assistant',
+                'exp_4_comp': 'Shandong Qixin CPA Firm',
+                'exp_4_li1': 'Audited 2 companies; checked 100+ large transactions and identified 10+ anomalies.',
+                'exp_4_li2': 'Assisted in physical asset inventory to ensure consistency between books and actuals.',
+                'title_honor': 'Honors & Activities',
+                'honor_1_title': 'Vice-Chancellor’s Scholarship',
+                'honor_1_desc': 'Awarded USYD Vice-Chancellor’s International Scholarship & Global Mobility Scholarship.',
+                'honor_2_title': 'Dalyell Scholars Program',
+                'honor_2_desc': 'Admitted to the prestigious academic program for students with ATAR 98+.',
+                'honor_3_title': 'Microsoft Office Specialist',
+                'honor_3_desc': 'Certified Microsoft Office Specialist (2016 Expert Level). Expert in Excel.',
+                'honor_4_title': 'IELTS 7.5',
+                'honor_4_desc': 'Fluent in English with strong capability in cross-border business communication.',
+                'title_pt': 'Part-time Jobs',
+                'pt_1_title': 'Delivery Experience',
+                'pt_1_desc': 'Gained insights into the gig economy through social practice, enhancing time management and resilience.',
+                'pt_2_title': 'Modeling Experience',
+                'pt_2_desc': 'Participated in commercial shoots and campus fashion events, demonstrating confidence and expressiveness.',
+                'title_int': 'Interests',
+                'int_desc': 'Yoga, Equestrianism, Diving, and Doing Handicrafts. Embracing diversity in life.',
+                'contact_title': 'Get In Touch',
+                'contact_sub': 'Open to new opportunities'
+            }
+        };
+
+        let currentLang = 'ch';
+        function toggleLanguage() {
+            currentLang = currentLang === 'ch' ? 'en' : 'ch';
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.style.opacity = 0;
+                    setTimeout(() => {
+                        el.innerHTML = translations[currentLang][key];
+                        el.style.opacity = 1;
+                    }, 200);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
